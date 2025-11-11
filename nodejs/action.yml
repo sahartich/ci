@@ -1,0 +1,37 @@
+name: "NodeJS Build CI"
+description: "Builds an Angular application using a specific Node.js and Angular CLI version on a Windows runner."
+inputs:
+  node-version:
+    description: "The Node.js version to use for the build."
+    required: true
+    default: "^16.10.0"
+  build-name:
+    description: "The name for the build script to be executed via npm run, based on the package.json file"
+    required: true
+    default: "build"    
+
+runs:
+  using: "composite"
+  steps:
+    - name: Clone repo to runner
+      uses: actions/checkout@v5
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      shell: cmd
+      run: npm install --legacy-peer-deps
+      
+    - name: Build the application
+      shell: cmd
+      run: npm run ${{ inputs.build-name }}
+      
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v5
+      with:
+          name: ${{ inputs.node-version}}-output
+          path: ./dist
