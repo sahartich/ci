@@ -15,7 +15,9 @@ runs:
     - name: Set Greeting
       run: echo "Hello ${{ inputs.who-to-greet }}"
       shell: bash
-
+    - name: checking out
+      uses: actions/checkout@v5
+      
     - name: Say Goodbye
       run: echo "Goodbye $INPUT_WHO_TO_GREET!"
       shell: bash
